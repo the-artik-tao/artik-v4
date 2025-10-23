@@ -1,5 +1,6 @@
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatOpenAI } from "@langchain/openai";
+import { ProjectIndex } from "./indexer/types.js";
 import { codeModderNode } from "./nodes/code-modder.js";
 import { plannerNode } from "./nodes/planner.js";
 import { previewerNode } from "./nodes/previewer.js";
@@ -8,6 +9,7 @@ export interface AgentState {
   goal: string;
   repoPath: string;
   repoSummary?: string;
+  projectIndex?: ProjectIndex; // NEW: Project index for intelligent file discovery
   plan?: string;
   steps?: string[];
   currentStep?: number;

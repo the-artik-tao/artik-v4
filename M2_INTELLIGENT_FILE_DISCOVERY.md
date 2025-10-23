@@ -124,6 +124,7 @@ interface DOMNode {
 **Purpose:** LLM generates actual code changes, not predefined actions
 
 **Key Insight:** Instead of predefined tools like `tsast.changeColor`, the LLM:
+
 1. Reads the current file
 2. Generates the complete modified code
 3. Returns a diff that can be applied
@@ -152,14 +153,19 @@ async function generateCodeChanges(
   llm: ChatOpenAI
 ): Promise<CodeChange[]> {
   // 1. Find target files using embeddings
-  const targetFiles = await findTargetFiles(goal, projectIndex, uiSnapshot, llm);
-  
+  const targetFiles = await findTargetFiles(
+    goal,
+    projectIndex,
+    uiSnapshot,
+    llm
+  );
+
   // 2. For each target file, generate changes
   const changes: CodeChange[] = [];
-  
+
   for (const target of targetFiles) {
     const currentCode = await readFile(target.filePath);
-    
+
     // 3. Ask LLM to generate the modified code
     const prompt = `You are modifying a React component to achieve: "${goal}"
 
@@ -179,10 +185,14 @@ Generate the COMPLETE modified code. Return JSON:
 
     const response = await llm.invoke(prompt);
     const { modifiedCode, explanation } = JSON.parse(response.content);
-    
+
     // 4. Generate diff
-    const diff = generateUnifiedDiff(currentCode, modifiedCode, target.filePath);
-    
+    const diff = generateUnifiedDiff(
+      currentCode,
+      modifiedCode,
+      target.filePath
+    );
+
     changes.push({
       filePath: target.filePath,
       originalCode: currentCode,
@@ -191,7 +201,7 @@ Generate the COMPLETE modified code. Return JSON:
       explanation,
     });
   }
-  
+
   return changes;
 }
 
@@ -211,12 +221,16 @@ async function findTargetFiles(
   const prompt = `Given the goal "${goal}", identify which component(s) to modify.
 
 Candidates:
-${JSON.stringify(candidates.map(c => ({
-  name: c.componentName,
-  file: c.filePath,
-  props: c.props,
-  structure: c.jsxStructure
-})), null, 2)}
+${JSON.stringify(
+  candidates.map((c) => ({
+    name: c.componentName,
+    file: c.filePath,
+    props: c.props,
+    structure: c.jsxStructure,
+  })),
+  null,
+  2
+)}
 
 Current UI:
 ${JSON.stringify(uiSnapshot.domTree, null, 2)}
@@ -226,8 +240,8 @@ Return JSON array of file paths, ordered by priority:
 
   const response = await llm.invoke(prompt);
   const filePaths = JSON.parse(response.content);
-  
-  return candidates.filter(c => filePaths.includes(c.filePath));
+
+  return candidates.filter((c) => filePaths.includes(c.filePath));
 }
 ```
 
