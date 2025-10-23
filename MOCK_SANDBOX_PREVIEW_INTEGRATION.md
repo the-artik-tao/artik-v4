@@ -12,14 +12,17 @@ Singleton service that manages the preview lifecycle:
 
 ```typescript
 export class PreviewService {
-  async startPreview(projectPath: string): Promise<{ url: string; mockUrl: string }>
-  async stopPreview(): Promise<void>
-  isRunning(): boolean
-  getUrls(): { url: string; mockUrl: string } | null
+  async startPreview(
+    projectPath: string
+  ): Promise<{ url: string; mockUrl: string }>;
+  async stopPreview(): Promise<void>;
+  isRunning(): boolean;
+  getUrls(): { url: string; mockUrl: string } | null;
 }
 ```
 
 **Features:**
+
 - Wraps Mock Sandbox Core's `runAll` function
 - Manages Docker sandbox lifecycle
 - Provides URLs for app and mock server
@@ -30,11 +33,13 @@ export class PreviewService {
 Next.js API endpoint for preview control:
 
 **Actions:**
+
 - `start`: Start preview with mocks for a project path
 - `stop`: Stop the current preview
 - `status`: Get current preview status
 
 **Error Handling:**
+
 - Validates project path
 - Returns detailed error messages
 - Handles service failures gracefully
@@ -44,11 +49,13 @@ Next.js API endpoint for preview control:
 Updated main page with preview integration:
 
 **State Management:**
+
 - `previewUrl`: Current preview URL (from sandbox)
 - `previewLoading`: Loading state during startup
 - `previewError`: Error message if preview fails
 
 **User Flow:**
+
 1. User enters project path
 2. Clicks "Open Project"
 3. Preview service starts (with loading indicator)
@@ -56,11 +63,13 @@ Updated main page with preview integration:
 5. User can close project (stops preview automatically)
 
 **UI States:**
+
 - **Loading**: Spinner with "Starting preview with mocks..." message
 - **Error**: Error message with retry button
 - **Running**: Iframe displaying the app
 
 **Cleanup:**
+
 - Stops preview on project close
 - Stops preview on component unmount
 - Clears state properly
@@ -98,6 +107,7 @@ User sees app running with mocks!
 ### Dependencies
 
 Added to `apps/web/package.json`:
+
 ```json
 {
   "dependencies": {
@@ -109,6 +119,7 @@ Added to `apps/web/package.json`:
 ### Configuration
 
 Preview service uses:
+
 - **DMR Model**: `ai/smollm2` (configurable)
 - **DMR URL**: `http://localhost:12434` (Docker Model Runner)
 - **App Port**: `5173` (Vite dev server)
@@ -236,11 +247,13 @@ All success criteria met:
 ## Files Created/Modified
 
 ### Created
+
 - `apps/web/src/lib/preview-service.ts` (Preview service implementation)
 - `apps/web/src/app/api/preview/route.ts` (API endpoint)
 - `MOCK_SANDBOX_PREVIEW_INTEGRATION.md` (This document)
 
 ### Modified
+
 - `apps/web/package.json` (Added dependency)
 - `apps/web/src/app/page.tsx` (UI integration)
 - `README.md` (Architecture and demo updates)
@@ -251,4 +264,3 @@ All success criteria met:
 The Mock Sandbox Preview Integration is complete and working. The preview section now automatically discovers APIs, generates mocks, and runs the app in an isolated sandbox. This provides a seamless development experience where users can preview UI changes with realistic data without needing to run real backends.
 
 The integration is backward compatible (works without mocks for projects with no API calls) and gracefully handles errors. The system is ready for testing with real projects and further enhancements.
-

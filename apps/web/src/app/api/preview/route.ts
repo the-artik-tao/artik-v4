@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
 import { previewService } from "@/lib/preview-service";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Preview API Route
  * POST /api/preview
- * 
+ *
  * Actions:
  * - start: Start preview with mocks for a project
  * - stop: Stop the current preview
@@ -53,7 +53,8 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: unknown) {
     console.error("[API] Preview error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       {
         error: "Preview failed",
@@ -63,4 +64,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
