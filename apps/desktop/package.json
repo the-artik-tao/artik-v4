@@ -1,0 +1,19 @@
+{
+  "name": "@artik/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "typecheck": "echo 'No TypeScript files in desktop app'",
+    "lint": "echo 'No TypeScript files to lint in desktop app'"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.5.3"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.9",
+    "typescript": "^5.3.3"
+  }
+}

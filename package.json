@@ -1,0 +1,33 @@
+{
+  "name": "artik-v3",
+  "version": "0.1.0",
+  "private": true,
+  "description": "UI/UX Agent Platform - Cursor for React/UX",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "dev:desktop": "pnpm --filter desktop tauri dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "mcp:git": "pnpm --filter @artik/mcp-git dev",
+    "mcp:ts-ast": "pnpm --filter @artik/mcp-ts-ast dev",
+    "mcp:package-manager": "pnpm --filter @artik/mcp-package-manager dev"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.1"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
+}
