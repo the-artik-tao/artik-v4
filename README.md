@@ -11,12 +11,19 @@ An intelligent development platform that combines automated API mocking, code in
 │  │              Next.js Web UI                           │  │
 │  │  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │  │
 │  │  │   Project    │  │   Preview    │  │    Diff    │  │  │
-│  │  │   Loader     │  │    Pane      │  │   Center   │  │  │
+│  │  │   Loader     │  │  (w/ Mocks)  │  │   Center   │  │  │
 │  │  └──────────────┘  └──────────────┘  └────────────┘  │  │
 │  │  ┌──────────────────────────────────────────────────┐  │  │
 │  │  │          Agent Console & Trace Viewer            │  │  │
 │  │  └──────────────────────────────────────────────────┘  │  │
 │  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                           ↕
+┌─────────────────────────────────────────────────────────────┐
+│         Mock Sandbox Core (API Discovery & Mocks)            │
+│  ┌──────────┐  ┌────────────┐  ┌──────────┐  ┌──────────┐  │
+│  │ Detector │→ │  Discovery │→ │Mock Gen  │→ │ Sandbox  │  │
+│  └──────────┘  └────────────┘  └──────────┘  └──────────┘  │
 └─────────────────────────────────────────────────────────────┘
                            ↕
 ┌─────────────────────────────────────────────────────────────┐
@@ -190,15 +197,23 @@ await services.stop();
 ### Agent System Demo
 
 1. Open the web UI at http://localhost:3000
-2. Enter path to `examples/demo-app` in the project loader
-3. Click "Preview" to see the demo app in iframe
-4. Click "Agent Console" and enter goal: "Add a variant prop to Button component"
+2. Click "Open Project" and select `examples/todo-app` (or `examples/demo-app`)
+3. **Preview automatically starts with mocks:**
+   - API endpoints discovered
+   - Mock responses generated via DMR
+   - App runs in Docker sandbox with mock backend
+4. Enter goal in chat: "Change the button color to green"
 5. Agent will:
-   - Plan the modification using LLM
-   - Execute code changes via MCP tools
+   - Index the project (components, props, JSX)
+   - Plan the modification using project index
+   - Modify code using AST transformations
    - Capture before/after screenshots
-6. Go to "Diff Center" to see UI + code diffs
-7. Click "Apply" to commit changes via git MCP
+6. Click on the diff in chat to see:
+   - UI screenshots (before/after)
+   - Code diff with syntax highlighting
+7. Click "Auto-apply" to commit changes
+
+**Key Feature:** Preview now runs with **real mock data** instead of empty state!
 
 ### Project Indexing Example
 

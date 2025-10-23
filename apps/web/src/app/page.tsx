@@ -21,7 +21,9 @@ export default function HomePage() {
     }>
   >([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [previewUrl] = useState("http://localhost:3001");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const [selectedDiff, setSelectedDiff] = useState<{
     filePath: string;
     codeDiff: string;
@@ -68,19 +70,52 @@ export default function HomePage() {
         // Fallback to default
         setAvailableModels(["ai/smollm2"]);
       });
+
+    // Cleanup: stop preview on unmount
+    return () => {
+      fetch("/api/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "stop" }),
+      }).catch(console.error);
+    };
   }, []);
 
   const handleOpenProject = async () => {
-    // For M0, we'll just store the path
-    // In real implementation, this would call Tauri API
-    if (repoPath) {
-      const info = {
-        framework: "Next.js", // stub detection
-        name: repoPath.split("/").pop(),
-      };
-      setProjectInfo(info);
-      // Save to sessionStorage so it persists across navigation
-      sessionStorage.setItem("projectInfo", JSON.stringify(info));
+    if (!repoPath) return;
+
+    const info = {
+      framework: "Next.js", // stub detection
+      name: repoPath.split("/").pop(),
+    };
+    setProjectInfo(info);
+    sessionStorage.setItem("projectInfo", JSON.stringify(info));
+
+    // Start preview with mocks
+    setPreviewLoading(true);
+    setPreviewError(null);
+
+    try {
+      const response = await fetch("/api/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "start", projectPath: repoPath }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setPreviewUrl(data.appUrl);
+        console.log("Preview started:", data.appUrl);
+        console.log("Mock API at:", data.mockUrl);
+      } else {
+        setPreviewError(data.error || "Failed to start preview");
+      }
+    } catch (error) {
+      console.error("Failed to start preview:", error);
+      setPreviewError("Failed to start preview");
+    } finally {
+      setPreviewLoading(false);
     }
   };
 
@@ -263,9 +298,23 @@ export default function HomePage() {
             Diff Center
           </Link>
           <button
-            onClick={() => {
+            onClick={async () => {
+              // Stop preview
+              try {
+                await fetch("/api/preview", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ action: "stop" }),
+                });
+              } catch (error) {
+                console.error("Failed to stop preview:", error);
+              }
+
+              // Clear state
               setProjectInfo(null);
               setTrace([]);
+              setPreviewUrl(null);
+              setPreviewError(null);
               sessionStorage.removeItem("projectInfo");
               sessionStorage.removeItem("trace");
             }}
@@ -284,17 +333,45 @@ export default function HomePage() {
             <span className="text-sm font-medium">Preview</span>
             <input
               type="text"
-              value={previewUrl}
+              value={previewUrl || ""}
               readOnly
+              placeholder="Starting preview..."
               className="flex-1 px-3 py-1 text-sm border rounded dark:bg-gray-800 dark:border-gray-600"
             />
           </div>
-          <div className="flex-1 bg-white dark:bg-gray-800">
+          <div className="flex-1 bg-white dark:bg-gray-800 relative">
             <iframe
-              src={previewUrl}
+              src={previewUrl || "about:blank"}
               className="w-full h-full border-0"
               title="Preview"
             />
+            
+            {/* Loading State */}
+            {previewLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50">
+                <div className="text-white text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4 mx-auto"></div>
+                  <p className="text-sm">Starting preview with mocks...</p>
+                  <p className="text-xs text-gray-300 mt-2">Discovering APIs and generating mocks</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Error State */}
+            {previewError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-red-900/50">
+                <div className="text-white text-center p-4 max-w-md">
+                  <p className="font-bold mb-2">Preview Error</p>
+                  <p className="text-sm">{previewError}</p>
+                  <button
+                    onClick={handleOpenProject}
+                    className="mt-4 px-4 py-2 bg-white text-red-900 rounded-lg hover:bg-gray-100 transition text-sm"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
