@@ -88,6 +88,8 @@ export async function POST(request: NextRequest) {
         filesChanged: result.filesChanged,
         codeDiff: result.codeDiff,
         screenshotPath: result.screenshotPath,
+        beforeScreenshot: result.beforeScreenshot,
+        afterScreenshot: result.afterScreenshot,
       },
     });
   } catch (error) {

@@ -12,13 +12,21 @@ export default function HomePage() {
   } | null>(null);
   const [goal, setGoal] = useState("");
   const [trace, setTrace] = useState<
-    Array<{ text: string; filePath?: string; codeDiff?: string }>
+    Array<{
+      text: string;
+      filePath?: string;
+      codeDiff?: string;
+      beforeScreenshot?: string;
+      afterScreenshot?: string;
+    }>
   >([]);
   const [isRunning, setIsRunning] = useState(false);
   const [previewUrl] = useState("http://localhost:3001");
   const [selectedDiff, setSelectedDiff] = useState<{
     filePath: string;
     codeDiff: string;
+    beforeScreenshot?: string;
+    afterScreenshot?: string;
   } | null>(null);
   const [autoApply, setAutoApply] = useState(false);
   const [availableModels, setAvailableModels] = useState<string[]>([]);
@@ -118,7 +126,15 @@ export default function HomePage() {
             data.result.codeDiff ||
             data.result.modifications?.[0] ||
             "No diff available",
-        } as { text: string; filePath: string; codeDiff: string });
+          beforeScreenshot: data.result.beforeScreenshot,
+          afterScreenshot: data.result.afterScreenshot,
+        } as {
+          text: string;
+          filePath: string;
+          codeDiff: string;
+          beforeScreenshot?: string;
+          afterScreenshot?: string;
+        });
       }
 
       if (data.result.screenshotPath) {
@@ -323,6 +339,8 @@ export default function HomePage() {
                         setSelectedDiff({
                           filePath: step.filePath,
                           codeDiff: step.codeDiff,
+                          beforeScreenshot: step.beforeScreenshot,
+                          afterScreenshot: step.afterScreenshot,
                         });
                       }
                     }}

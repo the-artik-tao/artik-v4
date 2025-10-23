@@ -81,21 +81,33 @@ export function DiffModal({
               <div className="grid grid-cols-2 gap-4">
                 {beforeScreenshot && (
                   <div>
-                    <p className="text-xs text-gray-500 mb-2">Before</p>
-                    <div className="border rounded p-2 bg-gray-100 dark:bg-gray-900 h-48 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">
-                        {beforeScreenshot}
-                      </span>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+                      Before
+                    </p>
+                    <div className="border rounded overflow-hidden bg-gray-50 dark:bg-gray-900">
+                      <img
+                        src={`/api/screenshot?path=${encodeURIComponent(
+                          beforeScreenshot
+                        )}`}
+                        alt="Before"
+                        className="w-full h-auto"
+                      />
                     </div>
                   </div>
                 )}
                 {afterScreenshot && (
                   <div>
-                    <p className="text-xs text-gray-500 mb-2">After</p>
-                    <div className="border rounded p-2 bg-gray-100 dark:bg-gray-900 h-48 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">
-                        {afterScreenshot}
-                      </span>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+                      After
+                    </p>
+                    <div className="border rounded overflow-hidden bg-gray-50 dark:bg-gray-900">
+                      <img
+                        src={`/api/screenshot?path=${encodeURIComponent(
+                          afterScreenshot
+                        )}`}
+                        alt="After"
+                        className="w-full h-auto"
+                      />
                     </div>
                   </div>
                 )}

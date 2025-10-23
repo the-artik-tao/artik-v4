@@ -16,6 +16,8 @@ export interface AgentState {
   filesChanged?: string[];
   codeDiff?: string;
   screenshotPath?: string;
+  beforeScreenshot?: string; // Base64 or path to before screenshot
+  afterScreenshot?: string; // Base64 or path to after screenshot
 }
 
 // Simplified agent graph for M0 - sequential execution
@@ -43,7 +45,22 @@ export function createAgentGraph(
         currentStep: 0,
       };
 
-      // Step 2: Code modification (first step only for M0)
+      // Step 2: Capture BEFORE screenshot
+      let beforeScreenshot: string | undefined;
+      if (playwrightClient) {
+        try {
+          const beforeResult = await previewerNode({
+            url: "http://localhost:3001",
+            route: "/",
+            playwrightClient,
+          });
+          beforeScreenshot = beforeResult.screenshotPath;
+        } catch (error) {
+          console.warn("Failed to capture before screenshot:", error);
+        }
+      }
+
+      // Step 3: Code modification (first step only for M0)
       if (!stateAfterPlanning.steps || stateAfterPlanning.steps.length === 0) {
         return stateAfterPlanning;
       }
@@ -64,18 +81,31 @@ export function createAgentGraph(
         modifications: modResult.modifications,
         filesChanged: modResult.filesChanged,
         codeDiff: modResult.codeDiff,
+        beforeScreenshot,
       };
 
-      // Step 3: Preview
-      const previewResult = await previewerNode({
-        url: "http://localhost:3001",
-        route: "/",
-        playwrightClient,
-      });
+      // Step 4: Capture AFTER screenshot
+      let afterScreenshot: string | undefined;
+      if (playwrightClient) {
+        try {
+          // Give Next.js time to hot reload
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          const afterResult = await previewerNode({
+            url: "http://localhost:3001",
+            route: "/",
+            playwrightClient,
+          });
+          afterScreenshot = afterResult.screenshotPath;
+        } catch (error) {
+          console.warn("Failed to capture after screenshot:", error);
+        }
+      }
 
       return {
         ...stateAfterModding,
-        screenshotPath: previewResult.screenshotPath,
+        screenshotPath: afterScreenshot,
+        afterScreenshot,
       };
     },
   };
