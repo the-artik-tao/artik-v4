@@ -1,0 +1,25 @@
+{
+  "name": "@the-artik-tao/mock-sandbox-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLI wrapper for @the-artik-tao/mock-sandbox-core (minimal, for testing)",
+  "bin": {
+    "react-mock-sandbox": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@the-artik-tao/mock-sandbox-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

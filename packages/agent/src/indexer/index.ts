@@ -114,7 +114,14 @@ export class ProjectIndexer {
     const files = await scanProject({
       rootPath: this.repoPath,
       extensions: [".tsx", ".ts", ".jsx", ".js"],
-      ignore: ["node_modules/**", ".next/**", "dist/**", "build/**", "*.test.*", "*.spec.*"],
+      ignore: [
+        "node_modules/**",
+        ".next/**",
+        "dist/**",
+        "build/**",
+        "*.test.*",
+        "*.spec.*",
+      ],
     });
 
     console.log(`📂 Found ${files.length} files`);
@@ -180,9 +187,8 @@ export class ProjectIndexer {
     const tasks = components.map((component) =>
       limit(async () => {
         try {
-          const embedding = await generateComponentEmbeddingWithRetry(
-            component
-          );
+          const embedding =
+            await generateComponentEmbeddingWithRetry(component);
           this.registry.addEmbedding(component.name, embedding);
           this.stats.embeddingsGenerated++;
           completed++;
@@ -231,4 +237,3 @@ export class ProjectIndexer {
     };
   }
 }
-

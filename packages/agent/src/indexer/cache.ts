@@ -81,4 +81,3 @@ export async function clearCache(repoPath: string): Promise<void> {
     console.warn("Failed to clear cache:", error);
   }
 }
-

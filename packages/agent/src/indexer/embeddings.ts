@@ -101,4 +101,3 @@ export async function generateQueryEmbedding(
 
   return await generateEmbedding(query, embeddingOptions);
 }
-

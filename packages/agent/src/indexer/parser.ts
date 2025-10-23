@@ -256,4 +256,3 @@ function extractJSXStructure(node: t.Node): string {
   extractElements(node);
   return elements.slice(0, 10).join(", "); // Limit to first 10 elements
 }
-
