@@ -18,7 +18,11 @@ export class AgentOrchestrator {
   async runTask(goal: string, repoPath: string): Promise<AgentState> {
     const llm = createLLM(this.config.llm);
     const tools = createAllTools(this.config.tools || {});
-    const graph = createAgentGraph(llm, tools, this.config.usePlaywright !== false);
+    const graph = createAgentGraph(
+      llm,
+      tools,
+      this.config.usePlaywright !== false
+    );
 
     const initialState: AgentState = {
       goal,

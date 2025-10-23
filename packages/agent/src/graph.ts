@@ -89,7 +89,7 @@ export function createAgentGraph(
         try {
           // Give Next.js time to hot reload
           await new Promise((resolve) => setTimeout(resolve, 2000));
-          
+
           const afterResult = await previewerNode({
             url: "http://localhost:3001",
             route: "/",

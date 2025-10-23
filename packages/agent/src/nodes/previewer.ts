@@ -1,6 +1,6 @@
-import { chromium } from "playwright";
 import { mkdir } from "fs/promises";
 import { join } from "path";
+import { chromium } from "playwright";
 
 export interface PreviewerInput {
   url: string;
@@ -30,13 +30,13 @@ export async function previewerNode(
         viewport: { width: 1280, height: 720 },
       });
       const page = await context.newPage();
-      
+
       await page.goto(fullUrl, { waitUntil: "networkidle", timeout: 10000 });
-      
+
       const timestamp = Date.now();
       const screenshotPath = join(screenshotDir, `screenshot-${timestamp}.png`);
       await page.screenshot({ path: screenshotPath, fullPage: false });
-      
+
       await browser.close();
 
       return {
