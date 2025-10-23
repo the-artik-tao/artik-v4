@@ -42,6 +42,7 @@ An intelligent development platform that combines automated API mocking, code in
 ## Features
 
 ### 🎯 Mock Sandbox System
+
 - **Automatic API Discovery**: AST-based detection of fetch/axios calls in React apps
 - **AI-Powered Mock Generation**: Synthesize realistic mock data using Docker Model Runner
 - **Isolated Sandbox Environment**: Run apps with mocks in Docker containers
@@ -49,18 +50,21 @@ An intelligent development platform that combines automated API mocking, code in
 - **Plugin Architecture**: Extensible detectors and sandbox providers
 
 ### 🧠 Intelligent Code Analysis
+
 - **Project Indexing**: Scan and parse React/TypeScript codebases with AST analysis
 - **Semantic Search**: Vector embeddings for component discovery
 - **Incremental Updates**: Smart caching with file modification tracking
 - **Component Registry**: O(1) lookups with metadata (props, JSX structure, imports)
 
 ### 🤖 AI Agent System
+
 - **LLM Integration**: Compatible with Docker Model Runner or OpenAI
 - **Pattern Matching**: Fast code modifications for common operations
 - **MCP Tool Integration**: Git, TypeScript AST, and package management tools
 - **Multi-Step Planning**: Planner → CodeModder → Previewer workflow
 
 ### 🎨 UI/UX Tooling
+
 - **Live Preview**: Iframe-based preview with route selection
 - **Diff Visualization**: Side-by-side UI and code diffs
 - **Screenshot Capture**: Playwright integration for before/after comparison
@@ -126,6 +130,7 @@ node run-with-mocks.mjs
 ```
 
 The app will:
+
 1. Discover all API calls in your code
 2. Generate realistic mock data using AI
 3. Spin up a mock server
@@ -304,12 +309,10 @@ artik-v4/
   - Factory + LLM + Fixtures integration
   - Live API recording and replay
   - Type-aware mock generation
-  
 - **M4**: Component tooling
   - Storybook integration
   - Per-component diff visualization
   - Design token extraction
-  
 - **M5**: Multi-agent orchestration
   - Parallel task execution
   - Rollback and versioning
@@ -329,10 +332,12 @@ artik-v4/
 Comprehensive documentation is available in the repository:
 
 ### Quick Start Guides
+
 - **[QUICKSTART.md](QUICKSTART.md)**: 5-minute setup guide for the entire platform
 - **[QUICKSTART_MOCK_SANDBOX.md](QUICKSTART_MOCK_SANDBOX.md)**: Detailed mock sandbox quick start
 
 ### Implementation Summaries
+
 - **[M0_IMPLEMENTATION_SUMMARY.md](M0_IMPLEMENTATION_SUMMARY.md)**: Walking skeleton milestone
 - **[M1_LLM_INTEGRATION.md](M1_LLM_INTEGRATION.md)**: LLM integration with Docker Model Runner
 - **[M1_MCP_WIRING.md](M1_MCP_WIRING.md)**: MCP tool wiring and agent execution
@@ -342,9 +347,11 @@ Comprehensive documentation is available in the repository:
 - **[MOCK_SANDBOX_IMPLEMENTATION.md](MOCK_SANDBOX_IMPLEMENTATION.md)**: Complete mock sandbox system overview
 
 ### Example Applications
+
 - **[DEMO_TODO_APP.md](DEMO_TODO_APP.md)**: Todo app demo with mock sandbox integration
 
 ### Package Documentation
+
 - **[packages/mock-sandbox-core/README.md](packages/mock-sandbox-core/README.md)**: Complete API reference for mock sandbox
 - **[packages/agent/README.md](packages/agent/README.md)**: Agent architecture and usage
 - **[packages/data/README.md](packages/data/README.md)**: Data layer API documentation
