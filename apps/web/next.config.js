@@ -5,6 +5,13 @@ const nextConfig = {
   experimental: {
     esmExternals: true,
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Exclude Playwright from webpack bundling - it needs to run in Node
+      config.externals = [...(config.externals || []), 'playwright', 'playwright-core'];
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;

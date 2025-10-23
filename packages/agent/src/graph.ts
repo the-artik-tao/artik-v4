@@ -1,4 +1,3 @@
-import { PlaywrightClient } from "@artik/shared";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatOpenAI } from "@langchain/openai";
 import { codeModderNode } from "./nodes/code-modder.js";
@@ -24,7 +23,7 @@ export interface AgentState {
 export function createAgentGraph(
   llm: ChatOpenAI,
   tools: DynamicStructuredTool[],
-  playwrightClient?: PlaywrightClient
+  usePlaywright: boolean = true
 ) {
   return {
     invoke: async (initialState: AgentState): Promise<AgentState> => {
@@ -47,12 +46,12 @@ export function createAgentGraph(
 
       // Step 2: Capture BEFORE screenshot
       let beforeScreenshot: string | undefined;
-      if (playwrightClient) {
+      if (usePlaywright) {
         try {
           const beforeResult = await previewerNode({
             url: "http://localhost:3001",
             route: "/",
-            playwrightClient,
+            usePlaywright: true,
           });
           beforeScreenshot = beforeResult.screenshotPath;
         } catch (error) {
@@ -86,15 +85,15 @@ export function createAgentGraph(
 
       // Step 4: Capture AFTER screenshot
       let afterScreenshot: string | undefined;
-      if (playwrightClient) {
+      if (usePlaywright) {
         try {
           // Give Next.js time to hot reload
           await new Promise((resolve) => setTimeout(resolve, 2000));
-
+          
           const afterResult = await previewerNode({
             url: "http://localhost:3001",
             route: "/",
-            playwrightClient,
+            usePlaywright: true,
           });
           afterScreenshot = afterResult.screenshotPath;
         } catch (error) {

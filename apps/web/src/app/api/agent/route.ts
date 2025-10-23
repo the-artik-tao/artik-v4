@@ -1,5 +1,5 @@
 import { AgentOrchestrator } from "@artik/agent";
-import { createMCPClient, PlaywrightClient } from "@artik/shared";
+import { createMCPClient } from "@artik/shared";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
@@ -58,23 +58,11 @@ export async function POST(request: NextRequest) {
       console.warn("TS-AST MCP not available:", error);
     }
 
-    // Try to connect to Playwright MCP
-    let playwrightClient: PlaywrightClient | undefined;
-    try {
-      const playwrightMCP = await createMCPClient("docker", [
-        "mcp",
-        "playwright",
-      ]);
-      playwrightClient = new PlaywrightClient(playwrightMCP);
-    } catch (error) {
-      console.warn("Playwright MCP not available:", error);
-    }
-
-    // Create orchestrator and run task
+    // Create orchestrator and run task with Playwright enabled
     const orchestrator = new AgentOrchestrator({
       llm: llmConfig,
       tools,
-      playwrightClient,
+      usePlaywright: true, // Enable Playwright for screenshots
     });
 
     const result = await orchestrator.runTask(goal, repoPath);

@@ -1,9 +1,11 @@
-import { PlaywrightClient } from "@artik/shared";
+import { chromium } from "playwright";
+import { mkdir } from "fs/promises";
+import { join } from "path";
 
 export interface PreviewerInput {
   url: string;
   route?: string;
-  playwrightClient?: PlaywrightClient;
+  usePlaywright?: boolean;
 }
 
 export interface PreviewerOutput {
@@ -17,22 +19,38 @@ export async function previewerNode(
 ): Promise<PreviewerOutput> {
   const fullUrl = input.route ? `${input.url}${input.route}` : input.url;
 
-  // If Playwright client is available, capture real screenshot
-  if (input.playwrightClient) {
+  // Capture real screenshot with Playwright
+  if (input.usePlaywright !== false) {
     try {
-      const result = await input.playwrightClient.screenshotFullPage(fullUrl);
+      const screenshotDir = join(process.cwd(), ".playwright-mcp");
+      await mkdir(screenshotDir, { recursive: true });
+
+      const browser = await chromium.launch({ headless: true });
+      const context = await browser.newContext({
+        viewport: { width: 1280, height: 720 },
+      });
+      const page = await context.newPage();
+      
+      await page.goto(fullUrl, { waitUntil: "networkidle", timeout: 10000 });
+      
+      const timestamp = Date.now();
+      const screenshotPath = join(screenshotDir, `screenshot-${timestamp}.png`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      
+      await browser.close();
+
       return {
-        screenshotPath: result.path || `screenshots/${Date.now()}.png`,
-        timestamp: Date.now(),
-        fullPage: true,
+        screenshotPath,
+        timestamp,
+        fullPage: false,
       };
     } catch (error) {
       console.error("Failed to capture screenshot:", error);
-      // Fall back to stub
+      // Fall through to stub
     }
   }
 
-  // Fallback stub for M0 or when Playwright is unavailable
+  // Fallback stub when Playwright is unavailable
   return {
     screenshotPath: `screenshots/${Date.now()}.png`,
     timestamp: Date.now(),
